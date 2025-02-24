@@ -5,14 +5,14 @@ import './App.css';
 const getCommonFiveLetterWords = () => {
   const popularWords = words.getMostPopular(10000);
   const fiveLetterWords = popularWords.filter(word => {
-    return word.length === 5 && new Set(word).size === 5;
+    return word.length === 4 && new Set(word).size === 4;
   });
   return fiveLetterWords;
 };
 
 const App = () => {
   const [secretWord, setSecretWord] = useState('');
-  const [inputs, setInputs] = useState(Array(5).fill(''));
+  const [inputs, setInputs] = useState(Array(4).fill(''));
   const [guesses, setGuesses] = useState([]);
   const [error, setError] = useState('');
   const [showModal, setShowModal] = useState(false);
@@ -22,7 +22,7 @@ const App = () => {
 
   useEffect(() => {
     const allWords = getCommonFiveLetterWords();
-    const uniqueWords = allWords.filter(word => new Set(word).size === 5);
+    const uniqueWords = allWords.filter(word => new Set(word).size === 4);
     setSecretWord(uniqueWords[Math.floor(Math.random() * uniqueWords.length)].toUpperCase());
   }, []);
 
@@ -49,7 +49,7 @@ const App = () => {
 
   const handleSubmit = () => {
     const word = inputs.join('');
-    if (new Set(word).size !== 5) {
+    if (new Set(word).size !== 4) {
       setError('Duplicate letters not allowed');
       return;
     }
@@ -60,11 +60,11 @@ const App = () => {
     setError('');
     const guessResult = calculateResult(word);
     setGuesses([...guesses, { word, ...guessResult }]);
-    setInputs(Array(5).fill(''));
+    setInputs(Array(4).fill(''));
 
-    if (guessResult.correct === 5) {
+    if (guessResult.correct === 4) {
       setShowModal(true);
-    } else if (guesses.length === 9) {
+    } else if (guesses.length === 7) {
       setShowModal(true);
     }
     inputRefs.current[0].focus();
@@ -98,7 +98,7 @@ const App = () => {
     const words = getCommonFiveLetterWords();
     const randomWord = words[Math.floor(Math.random() * words.length)].toUpperCase();
     setSecretWord(randomWord);
-    setInputs(Array(5).fill(''));
+    setInputs(Array(4).fill(''));
     setGuesses([]);
     setError('');
     setShowModal(false);
@@ -137,7 +137,7 @@ const App = () => {
       {showModal && (
         <div className="modal">
           <div className="modal-content">
-            {guesses[guesses.length - 1]?.correct === 5 ? (
+            {guesses[guesses.length - 1]?.correct === 4 ? (
               <h2>Congratulations! 🎉 You are a genius!</h2>
             ) : (
               <h2>Try Again! The correct word was: {secretWord}</h2>
